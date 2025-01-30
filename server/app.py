@@ -1,4 +1,7 @@
+import os
+print("Current working directory:", os.getcwd())
 from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS 
 from models import db, Event, User, Registration
@@ -6,7 +9,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
-
+# Initialize the Flask app
 app = Flask(
     __name__,
     static_url_path='',
@@ -14,12 +17,15 @@ app = Flask(
     template_folder='../client/build'
 )
 
+# Enable Cross-Origin Resource Sharing (CORS)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///events.db'
+# Setup database URI from environment variable
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'postgresql://event_management_db_ryil_user:s2NqNTqRhbndWCsKqOtqwViSVaQYnWtm@dpg-cudtnnrqf0us73foalrg-a.oregon-postgres.render.com/event_management_db_ryil')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db.init_app(app)
 
+# Initialize the SQLAlchemy and Migrate instances
+db.init_app(app)
 migrate = Migrate(app, db)
 
 @app.route('/events', methods=['GET'])
@@ -125,8 +131,6 @@ def get_user_events(user_id):
         'date': event.date,
         'location': event.location
     } for event in events])
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
