@@ -45,19 +45,23 @@ const EventList = () => {
       </div>
     </div>
   );
-
   function handleDelete(eventId) {
     if (window.confirm('Are you sure you want to delete this event?')) {
       fetch(`http://127.0.0.1:5000/event/${eventId}`, {
         method: 'DELETE',
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then((data) => {
+              throw new Error(data.message || 'Failed to delete event');
+            });
+          }
+          return response.json();
+        })
         .then((data) => {
-          if (data.success) {
+          if (data.message === 'Event deleted successfully!') {
             setEvents(events.filter((event) => event.id !== eventId));
             alert('Event deleted successfully!');
-          } else {
-            alert('Failed to delete event');
           }
         })
         .catch((err) => {
@@ -65,6 +69,6 @@ const EventList = () => {
         });
     }
   }
-};
+}
 
 export default EventList;

@@ -3,8 +3,16 @@ from flask_migrate import Migrate
 from flask_cors import CORS 
 from models import db, Event, User, Registration
 from datetime import datetime
+from dotenv import load_dotenv
+load_dotenv()
 
-app = Flask(__name__)
+
+app = Flask(
+    __name__,
+    static_url_path='',
+    static_folder='../client/build',
+    template_folder='../client/build'
+)
 
 CORS(app)
 
@@ -117,6 +125,8 @@ def get_user_events(user_id):
         'date': event.date,
         'location': event.location
     } for event in events])
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
