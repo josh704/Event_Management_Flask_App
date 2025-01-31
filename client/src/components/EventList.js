@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const EventList = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null); 
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     setLoading(true);
@@ -15,36 +17,11 @@ const EventList = () => {
       })
       .catch((err) => {
         console.error('Error fetching events:', err);
+        setError('Failed to fetch events. Please try again later.');
         setLoading(false);
       });
   }, []);
 
-  return (
-    <div className="home-container">
-      <h1>All Events</h1>
-      {loading && <p>Loading events...</p>}
-      <div className="event-list">
-        {events.map((event) => (
-          <div key={event.id} className="event-item">
-            <h3 className="event-title">
-              <Link to={`/events/${event.id}`}>{event.name}</Link>
-            </h3>
-            <p className="event-description">{event.description}</p>
-            <p className="event-details">
-              <strong>Date:</strong> {event.date}
-            </p>
-            <p className="event-details">
-              <strong>Location:</strong> {event.location}
-            </p>
-            <div className="event-actions">
-              <button onClick={() => window.location.href = `/create?eventId=${event.id}`}>Update</button>
-              <button onClick={() => handleDelete(event.id)}>Delete</button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
   function handleDelete(eventId) {
     if (window.confirm('Are you sure you want to delete this event?')) {
       fetch(`http://127.0.0.1:5000/event/${eventId}`, {
@@ -69,6 +46,39 @@ const EventList = () => {
         });
     }
   }
-}
+
+  return (
+    <div className="home-container">
+      <h1>All Events</h1>
+      
+      {/* Display loading message */}
+      {loading && <p>Loading events...</p>}
+
+      {/* Display error message */}
+      {error && <p>{error}</p>}
+
+      <div className="event-list">
+        {events.map((event) => (
+          <div key={event.id} className="event-item">
+            <h3 className="event-title">
+              <Link to={`/events/${event.id}`}>{event.name}</Link>
+            </h3>
+            <p className="event-description">{event.description}</p>
+            <p className="event-details">
+              <strong>Date:</strong> {event.date}
+            </p>
+            <p className="event-details">
+              <strong>Location:</strong> {event.location}
+            </p>
+            <div className="event-actions">
+              <button onClick={() => navigate(`/create?eventId=${event.id}`)}>Update</button>
+              <button onClick={() => handleDelete(event.id)}>Delete</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default EventList;
