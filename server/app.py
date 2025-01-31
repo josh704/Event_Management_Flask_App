@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS 
-from models import db, Event, User, Registration
+from server.models import db, Event, User, Registration
 from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
@@ -107,12 +107,53 @@ def delete_event(event_id):
     db.session.commit()
     return jsonify({'message': 'Event deleted successfully!'})
 
+@app.route('/users', methods=['POST'])
+def create_user():
+    data = request.get_json()
+    
+    # Validate incoming data
+    if not data.get('username') or not data.get('email'):
+        return jsonify({'error': 'Username and email are required'}), 400
+
+    # Check if the username already exists
+    existing_user = User.query.filter_by(username=data['username']).first()
+    if existing_user:
+        return jsonify({'error': 'Username already exists'}), 400
+    
+    # Create the new user
+    new_user = User(username=data['username'], email=data['email'])
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({'message': 'User registered successfully!'}), 201
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    users = User.query.all()  # Fetch all users from the database
+    return jsonify([{
+        'id': user.id,
+        'username': user.username,
+        'email': user.email
+    } for user in users])
+
 @app.route('/register', methods=['POST'])
 def register_for_event():
     data = request.get_json()
+    
+    # Ensure both user_id and event_id are provided
+    if not data.get('user_id') or not data.get('event_id'):
+        return jsonify({'error': 'Missing user_id or event_id'}), 400
+    
+    # Fetch the user and event objects from the database
     user = User.query.get_or_404(data['user_id'])
     event = Event.query.get_or_404(data['event_id'])
-
+    
+    # Check if the user is already registered for the event
+    existing_registration = Registration.query.filter_by(user_id=user.id, event_id=event.id).first()
+    if existing_registration:
+        return jsonify({'error': 'User already registered for this event'}), 400
+    
+    # Create the registration and add to the session
     registration = Registration(user_id=user.id, event_id=event.id)
     db.session.add(registration)
     db.session.commit()
@@ -131,6 +172,7 @@ def get_user_events(user_id):
         'date': event.date,
         'location': event.location
     } for event in events])
+
 
 if __name__ == '__main__':
     app.run(debug=True)
