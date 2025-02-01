@@ -17,9 +17,9 @@ const EventDetails = ({ event, userId }) => {
     .then(response => response.json())
     .then(data => {
       if (data.message) {
-        setMessage(data.message); // Show success message
+        setMessage(data.message); 
       } else if (data.error) {
-        setMessage(data.error); // Show error message
+        setMessage(data.error);
       }
     })
     .catch(error => setMessage('Error registering for event.'));

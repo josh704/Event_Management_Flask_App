@@ -9,7 +9,6 @@ from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
-# Initialize the Flask app
 app = Flask(
     __name__,
     static_url_path='',
@@ -17,14 +16,11 @@ app = Flask(
     template_folder='../client/build'
 )
 
-# Enable Cross-Origin Resource Sharing (CORS)
 CORS(app)
 
-# Setup database URI from environment variable
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'postgresql://event_management_db_ryil_user:s2NqNTqRhbndWCsKqOtqwViSVaQYnWtm@dpg-cudtnnrqf0us73foalrg-a.oregon-postgres.render.com/event_management_db_ryil')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize the SQLAlchemy and Migrate instances
 db.init_app(app)
 migrate = Migrate(app, db)
 
@@ -111,16 +107,13 @@ def delete_event(event_id):
 def create_user():
     data = request.get_json()
     
-    # Validate incoming data
     if not data.get('username') or not data.get('email'):
         return jsonify({'error': 'Username and email are required'}), 400
 
-    # Check if the username already exists
     existing_user = User.query.filter_by(username=data['username']).first()
     if existing_user:
         return jsonify({'error': 'Username already exists'}), 400
     
-    # Create the new user
     new_user = User(username=data['username'], email=data['email'])
     db.session.add(new_user)
     db.session.commit()
@@ -129,7 +122,7 @@ def create_user():
 
 @app.route('/users', methods=['GET'])
 def get_users():
-    users = User.query.all()  # Fetch all users from the database
+    users = User.query.all()  
     return jsonify([{
         'id': user.id,
         'username': user.username,
@@ -140,20 +133,16 @@ def get_users():
 def register_for_event():
     data = request.get_json()
     
-    # Ensure both user_id and event_id are provided
     if not data.get('user_id') or not data.get('event_id'):
         return jsonify({'error': 'Missing user_id or event_id'}), 400
     
-    # Fetch the user and event objects from the database
     user = User.query.get_or_404(data['user_id'])
     event = Event.query.get_or_404(data['event_id'])
     
-    # Check if the user is already registered for the event
     existing_registration = Registration.query.filter_by(user_id=user.id, event_id=event.id).first()
     if existing_registration:
         return jsonify({'error': 'User already registered for this event'}), 400
     
-    # Create the registration and add to the session
     registration = Registration(user_id=user.id, event_id=event.id)
     db.session.add(registration)
     db.session.commit()

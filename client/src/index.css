@@ -301,81 +301,68 @@ p {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center; /* Center align the text */
-  background-color: #f4f4f9; /* Light background for better contrast */
+  text-align: center; 
+  background-color: #f4f4f9; 
 }
 
 h1 {
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 30px;
-  color: #2c3e50; /* Dark color for the header */
+  color: #2c3e50; 
   text-transform: uppercase;
-  letter-spacing: 2px; /* Add some space between letters */
+  letter-spacing: 2px; 
 }
 
 .user-list {
   list-style-type: none;
   padding: 0;
   width: 100%;
-  max-width: 700px; /* Increase max-width for larger screen sizes */
+  max-width: 700px; 
   margin: 0;
 }
 
 .user-item {
   padding: 15px;
   margin: 10px 0;
-  background-color: #ffffff; /* White background for each item */
+  background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for a card-like effect */
-  font-size: 16px; /* Medium font size */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+  font-size: 16px; 
   color: #333;
-  transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover effect */
+  transition: transform 0.3s, box-shadow 0.3s; 
 }
 
 .user-item:hover {
-  transform: translateY(-5px); /* Slight lift effect */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+  transform: translateY(-5px); 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); 
 }
 
 .user-info {
   font-weight: normal;
-  font-size: 16px; /* Medium font size */
+  font-size: 16px; 
   color: #555;
   text-align: center;
 }
 
 .user-info .email {
-  color: #888; /* Lighter gray for email */
-  font-style: italic; /* Italic style for the email */
+  color: #888; 
+  font-style: italic; 
 }
 
 .user-item span {
   display: inline-block;
-  margin-bottom: 5px; /* Small space between name and email */
+  margin-bottom: 5px; 
 }
 
 .user-item:not(:last-child) {
-  border-bottom: 1px solid #f0f0f0; /* Subtle border between list items */
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .user-item:first-child {
-  margin-top: 20px; /* Add some space at the top for the first item */
+  margin-top: 20px; 
 }
 
-/* Optional: Add responsive design for mobile */
-@media (max-width: 768px) {
-  .user-list-container {
-    padding: 15px;
-  }
-  h1 {
-    font-size: 24px;
-  }
-  .user-list {
-    max-width: 100%; /* Allow list to take full width on small screens */
-  }
-}
-/* Register User Styles */
 .register-container {
   padding: 20px;
   background-color: #ffffff;
@@ -423,7 +410,7 @@ input {
 }
 
 input:focus {
-  border-color: #3498db; /* Blue border on focus */
+  border-color: #3498db; 
 }
 
 button.submit-button {
@@ -438,11 +425,11 @@ button.submit-button {
 }
 
 button.submit-button:hover {
-  background-color: #2980b9; /* Darker blue when hovered */
+  background-color: #2980b9; 
 }
 
 .message {
   margin-top: 20px;
   font-size: 16px;
-  color: #e74c3c; /* Red color for error/success messages */
+  color: #e74c3c; 
 }

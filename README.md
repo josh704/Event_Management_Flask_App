@@ -56,3 +56,4 @@ npm start
 This project is licensed under the MIT License
 **Deplyoment**
 https://event-management-flask-app.onrender.com
+https://eventmanagementfrontend123.netlify.app
